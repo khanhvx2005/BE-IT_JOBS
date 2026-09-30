@@ -14,6 +14,10 @@ export class UsersService {
     const hash = await bcrypt.hash(password, salt);
     return hash;
   }
+
+  isValidPassword = async (pass: string, hash: string) => {
+    return await bcrypt.compare(pass, hash);
+  }
   async create(createUserDto: CreateUserDto) {
     const hashPassword = await this.getHashPassword(createUserDto.password);
     const user = await this.userModel.create({
@@ -29,6 +33,12 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+  }
+
+  async findOneByUsername(username: string) {
+    return await this.userModel.findOne({
+      email: username
+    });
   }
 
   async update(updateUserDto: UpdateUserDto) {
